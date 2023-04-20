@@ -1,19 +1,5 @@
 {
   "birthdays": [
-    {
-      "name": "Lambe Boluwatife",
-      "date": "Thursday, November 04, 1999",
-      "id": 1
-    },
-    {
-      "name": "John Doe",
-      "date": "Sunday, April 19, 1998",
-      "id": 2
-    },
-    {
-      "name": "Jane Doe",
-      "date": "Monday, November 10, 1997",
-      "id": 3
-    }
+   
   ]
 }
