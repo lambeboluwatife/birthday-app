@@ -9,6 +9,7 @@ import { Analytics } from "@vercel/analytics/react";
 
 const App = () => {
   const [showAddBirthday, setShowAddBirthday] = useState(false);
+  const [showBirthdays, setShowBirthdays] = useState(false);
   const [birthdays, setBirthdays] = useState([]);
 
   const birthdaysFromDB = useLiveQuery(() => db.birthdays.toArray(), []);
@@ -117,7 +118,11 @@ const App = () => {
             <AddBirthday birthdays={birthdays} onAdd={addBirthday} />
           )}
           {birthdays.length > 0 ? (
-            <Birthdays birthdays={birthdays} />
+            <Birthdays
+              birthdays={birthdays}
+              onAdd={() => setShowBirthdays(!showBirthdays)}
+              showBirthdays={showBirthdays}
+            />
           ) : (
             "No Birthday Saved"
           )}

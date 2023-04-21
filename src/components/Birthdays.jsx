@@ -1,8 +1,9 @@
 import moment from "moment";
 import Birthday from "./Birthday";
 import TodayBirthdays from "./TodayBirthdays";
+import Button from "./Button";
 
-const Birthdays = ({ birthdays }) => {
+const Birthdays = ({ birthdays, onAdd, showBirthdays }) => {
   const today = moment().format("MMMM DD");
 
   const todayBirthdays = birthdays.filter(
@@ -18,9 +19,16 @@ const Birthdays = ({ birthdays }) => {
         "No Birthday Today"
       )}
       <h3 style={{ textAlign: "center", marginTop: "20px" }}>All Birthdays</h3>
-      {birthdays.map((birthday) => (
-        <Birthday key={birthday.id} birthday={birthday} />
-      ))}
+
+      <Button
+        color={showBirthdays ? "red" : "green"}
+        text={showBirthdays ? "Close" : "Show Birthdays"}
+        onClick={onAdd}
+      />
+      {showBirthdays &&
+        birthdays.map((birthday) => (
+          <Birthday key={birthday.id} birthday={birthday} />
+        ))}
     </>
   );
 };
