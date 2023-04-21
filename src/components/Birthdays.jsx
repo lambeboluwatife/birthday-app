@@ -11,18 +11,16 @@ const Birthdays = ({ birthdays }) => {
 
   return (
     <>
-      <h3 style={{ textAlign: "center" }}>All Birthdays</h3>
-      {birthdays.map((birthday) => (
-        <Birthday key={birthday.id} birthday={birthday} />
-      ))}
-      <h3 style={{ textAlign: "center", marginTop: "20px" }}>
-        Today's Birthday(s)
-      </h3>
+      <h3 style={{ textAlign: "center" }}>Today's Birthday(s)</h3>
       {todayBirthdays.length > 0 ? (
         <TodayBirthdays todayBirthdays={todayBirthdays} />
       ) : (
         "No Birthday Today"
       )}
+      <h3 style={{ textAlign: "center", marginTop: "20px" }}>All Birthdays</h3>
+      {birthdays.map((birthday) => (
+        <Birthday key={birthday.id} birthday={birthday} />
+      ))}
     </>
   );
 };
