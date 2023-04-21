@@ -5,6 +5,7 @@ import AddBirthday from "./components/AddBirthday";
 import Birthdays from "./components/Birthdays";
 import { db } from "./dexie";
 import { useLiveQuery } from "dexie-react-hooks";
+import { Analytics } from "@vercel/analytics/react";
 
 const App = () => {
   const [showAddBirthday, setShowAddBirthday] = useState(false);
@@ -122,6 +123,7 @@ const App = () => {
           )}
         </>
       )}
+      <Analytics />
     </div>
   );
 };
