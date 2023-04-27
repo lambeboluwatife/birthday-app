@@ -38,7 +38,7 @@ const AddBirthday = ({ onAdd }) => {
       <div className="form-control">
         <label>Birthday Date</label>
         <input
-          type="text"
+          type="date"
           placeholder="Add Birthday Date (Format: MM/DD/YYYY)"
           value={date}
           onChange={(e) => setDate(e.target.value)}
