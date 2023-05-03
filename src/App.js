@@ -11,6 +11,7 @@ const App = () => {
   const [showAddBirthday, setShowAddBirthday] = useState(false);
   const [showBirthdays, setShowBirthdays] = useState(false);
   const [birthdays, setBirthdays] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const birthdaysFromDB = useLiveQuery(() => db.birthdays.toArray(), []);
 
@@ -23,7 +24,9 @@ const App = () => {
   // }, []);
 
   useEffect(() => {
+    setLoading(true);
     setBirthdays(birthdaysFromDB);
+    setLoading(false);
   }, [birthdaysFromDB]);
 
   // Fetch Birthdays
@@ -42,7 +45,6 @@ const App = () => {
 
     // Check if name already exists in Dexie database
     const birthdays = await db.birthdays.toArray();
-    console.log(birthdays);
 
     const existingBirthday = birthdays.find((bday) => bday.name === name);
 
@@ -57,7 +59,15 @@ const App = () => {
     }
   };
 
-  console.log(birthdays);
+  // Delete Birthday
+  const deleteBirthday = async (id) => {
+    db.transaction("rw", db.birthdays, function () {
+      return db.birthdays.delete(id);
+    }).catch((err) => {
+      alert(err);
+      throw err;
+    });
+  };
 
   // Add Birthday
   // json-server
@@ -122,6 +132,8 @@ const App = () => {
               birthdays={birthdays}
               onAdd={() => setShowBirthdays(!showBirthdays)}
               showBirthdays={showBirthdays}
+              loading={loading}
+              onDelete={deleteBirthday}
             />
           ) : (
             "No Birthday Saved"
