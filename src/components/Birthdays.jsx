@@ -3,7 +3,14 @@ import Birthday from "./Birthday";
 import TodayBirthdays from "./TodayBirthdays";
 import Button from "./Button";
 
-const Birthdays = ({ birthdays, onAdd, showBirthdays, loading, onDelete }) => {
+const Birthdays = ({
+  birthdays,
+  onAdd,
+  showBirthdays,
+  loading,
+  onDelete,
+  onEditClick,
+}) => {
   const today = moment().format("MMMM DD");
 
   const todayBirthdays = birthdays.filter(
@@ -31,7 +38,12 @@ const Birthdays = ({ birthdays, onAdd, showBirthdays, loading, onDelete }) => {
       />
       {showBirthdays &&
         birthdays.map((birthday) => (
-          <Birthday key={birthday.id} birthday={birthday} onDelete={onDelete} />
+          <Birthday
+            key={birthday.id}
+            onEditClick={onEditClick}
+            birthday={birthday}
+            onDelete={onDelete}
+          />
         ))}
     </>
   );
