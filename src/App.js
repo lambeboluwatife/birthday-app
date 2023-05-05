@@ -7,6 +7,7 @@ import { db } from "./dexie";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Analytics } from "@vercel/analytics/react";
 import EditBirthday from "./components/EditBirthday";
+import { useSpring, animated } from "@react-spring/web";
 
 const App = () => {
   const [showAddBirthday, setShowAddBirthday] = useState(false);
@@ -91,6 +92,13 @@ const App = () => {
     });
   };
 
+  // Fade In Animation
+  const fadeIn = useSpring({
+    from: { opacity: 0, marginTop: -500 },
+    to: { opacity: 1, marginTop: 50 },
+    config: { delay: 1000, duration: 1000 },
+  });
+
   // Add Birthday
   // json-server
   // const addBirthday = async (birthday) => {
@@ -137,7 +145,7 @@ const App = () => {
   // };
 
   return (
-    <div className="container">
+    <animated.div className="container" style={fadeIn}>
       <Header
         onAdd={() => setShowAddBirthday(!showAddBirthday)}
         showAdd={showAddBirthday}
@@ -171,7 +179,7 @@ const App = () => {
         </>
       )}
       <Analytics />
-    </div>
+    </animated.div>
   );
 };
 
