@@ -58,15 +58,21 @@ const App = () => {
         name,
         date,
       });
+
+      setShowAddBirthday(!showAddBirthday);
+
+      alert("Birthday Added");
     }
   };
 
-  // Edit Birthday
+  // Select Birthday to Edit
   const editBirthday = async (id) => {
+    setShowAddBirthday(false);
     setIsEditing(true);
     setCurrentBirthday(birthdays.find((bday) => bday.id === id));
   };
 
+  // Edit Birthday
   const onUpdate = async (id, updatedBirthday) => {
     db.birthdays.update(id, updatedBirthday).then(function (updated) {
       if (updated) alert("Updated");
