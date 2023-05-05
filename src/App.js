@@ -6,12 +6,15 @@ import Birthdays from "./components/Birthdays";
 import { db } from "./dexie";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Analytics } from "@vercel/analytics/react";
+import EditBirthday from "./components/EditBirthday";
 
 const App = () => {
   const [showAddBirthday, setShowAddBirthday] = useState(false);
   const [showBirthdays, setShowBirthdays] = useState(false);
   const [birthdays, setBirthdays] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [currentBirthday, setCurrentBirthday] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
 
   const birthdaysFromDB = useLiveQuery(() => db.birthdays.toArray(), []);
 
@@ -39,7 +42,6 @@ const App = () => {
   // Add Birthday
   // DexieDB
   const addBirthday = async (birthday) => {
-    // const date = moment(birthday.date).format("dddd, MMMM DD, YYYY");
     const date = birthday.date;
     const name = birthday.name;
 
@@ -57,6 +59,20 @@ const App = () => {
         date,
       });
     }
+  };
+
+  // Edit Birthday
+  const editBirthday = async (id) => {
+    setIsEditing(true);
+    setCurrentBirthday(birthdays.find((bday) => bday.id === id));
+  };
+
+  const onUpdate = async (id, updatedBirthday) => {
+    db.birthdays.update(id, updatedBirthday).then(function (updated) {
+      if (updated) alert("Updated");
+    });
+
+    setIsEditing(false);
   };
 
   // Delete Birthday
@@ -120,6 +136,13 @@ const App = () => {
         onAdd={() => setShowAddBirthday(!showAddBirthday)}
         showAdd={showAddBirthday}
       />
+      {isEditing && (
+        <EditBirthday
+          onUpdate={onUpdate}
+          currentBirthday={currentBirthday}
+          isEditing={() => setIsEditing(!isEditing)}
+        />
+      )}
       {!birthdays ? (
         <div style={{ textAlign: "center" }}>Loading...</div>
       ) : (
@@ -134,6 +157,7 @@ const App = () => {
               showBirthdays={showBirthdays}
               loading={loading}
               onDelete={deleteBirthday}
+              onEditClick={editBirthday}
             />
           ) : (
             "No Birthday Saved"
