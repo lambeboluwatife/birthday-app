@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { addBirthday } from "../slices/birthdaySlice";
+import { useDispatch } from "react-redux";
 
 const AddBirthday = ({ onAdd }) => {
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
 
@@ -8,16 +11,16 @@ const AddBirthday = ({ onAdd }) => {
     e.preventDefault();
 
     if (!name) {
-      alert("Please add a task");
+      alert("Please add a name");
       return;
     }
 
     if (!date) {
-      alert("Please add a task");
+      alert("Please add a birthdate");
       return;
     }
 
-    onAdd({ name, date });
+    dispatch(addBirthday({ name, date }));
 
     setName("");
     setDate("");

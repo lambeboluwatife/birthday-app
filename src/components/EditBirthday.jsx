@@ -21,9 +21,6 @@ const EditBirthday = ({ currentBirthday, onUpdate, isEditing }) => {
     }
 
     onUpdate(currentBirthday.id, { name, date });
-
-    setName("");
-    setDate("");
   };
   return (
     <form className="add-form" onSubmit={onSubmit}>
@@ -39,8 +36,8 @@ const EditBirthday = ({ currentBirthday, onUpdate, isEditing }) => {
         </label>
         <input
           type="text"
-          placeholder={currentBirthday.name}
-          onChange={(e) => setName(e.target.value)}
+          defaultValue={currentBirthday.name}
+          onChange={(e) => setName(e.target.defaultValue)}
         />
       </div>
 
@@ -48,8 +45,8 @@ const EditBirthday = ({ currentBirthday, onUpdate, isEditing }) => {
         <label>Birthday Date</label>
         <input
           type="date"
-          placeholder={currentBirthday.date}
-          onChange={(e) => setDate(e.target.value)}
+          defaultValue={currentBirthday.date}
+          onChange={(e) => setDate(e.target.defaultValue)}
         />
       </div>
 

@@ -14,10 +14,6 @@ const Header = ({ title, onAdd, showAdd }) => {
   );
 };
 
-Header.defaultProps = {
-  title: "Birthday Reminder",
-};
-
 Header.propTypes = {
   title: PropTypes.string.isRequired,
 };
