@@ -1,19 +1,33 @@
+import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
 import Birthday from "./Birthday";
 import TodayBirthdays from "./TodayBirthdays";
 import Button from "./Button";
+import { useEffect } from "react";
+import { fetchBirthdays } from "../slices/birthdaySlice";
 
 const Birthdays = ({
-  birthdays,
   onAdd,
   showBirthdays,
-  loading,
   onDelete,
   onEditClick,
+  showDeleteModal,
+  showDelete,
 }) => {
+  const dispatch = useDispatch();
+  const { birthdayFromDB, loading } = useSelector((state) => state.birthday);
+
+  useEffect(() => {
+    dispatch(fetchBirthdays());
+  }, [dispatch]);
+
+  if (loading) {
+    return <h5>Loading...</h5>;
+  }
+
   const today = moment().format("MMMM DD");
 
-  const todayBirthdays = birthdays.filter(
+  const todayBirthdays = birthdayFromDB.filter(
     (birthday) => moment(birthday.date).format("MMMM DD") === today
   );
 
@@ -37,12 +51,14 @@ const Birthdays = ({
         onClick={onAdd}
       />
       {showBirthdays &&
-        birthdays.map((birthday) => (
+        birthdayFromDB.map((birthday) => (
           <Birthday
             key={birthday.id}
             onEditClick={onEditClick}
             birthday={birthday}
             onDelete={onDelete}
+            showDeleteModal={showDeleteModal}
+            showDelete={showDelete}
           />
         ))}
     </>

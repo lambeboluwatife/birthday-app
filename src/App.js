@@ -16,6 +16,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [currentBirthday, setCurrentBirthday] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const birthdaysFromDB = useLiveQuery(() => db.birthdays.toArray(), []);
 
@@ -42,29 +43,28 @@ const App = () => {
 
   // Add Birthday
   // DexieDB
-  const addBirthday = async (birthday) => {
-    const date = birthday.date;
-    const name = birthday.name;
+  // const addBirthday = async (birthday) => {
+  //   const { name, date } = birthday;
 
-    // Check if name already exists in Dexie database
-    const birthdays = await db.birthdays.toArray();
+  //   // Check if name already exists in Dexie database
+  //   const birthdays = await db.birthdays.toArray();
 
-    const existingBirthday = birthdays.find((bday) => bday.name === name);
+  //   const existingBirthday = birthdays.find((bday) => bday.name === name);
 
-    if (existingBirthday) {
-      alert(`${name} already exists in database`);
-    } else {
-      // Add the new birthday!
-      await db.birthdays.add({
-        name,
-        date,
-      });
+  //   if (existingBirthday) {
+  //     alert(`${name} already exists in database`);
+  //   } else {
+  //     // Add the new birthday!
+  //     await db.birthdays.add({
+  //       name,
+  //       date,
+  //     });
 
-      setShowAddBirthday(!showAddBirthday);
+  //     setShowAddBirthday(!showAddBirthday);
 
-      alert("Birthday Added");
-    }
-  };
+  //     alert("Birthday Added");
+  //   }
+  // };
 
   // Select Birthday to Edit
   const editBirthday = async (id) => {
@@ -90,6 +90,7 @@ const App = () => {
       alert(err);
       throw err;
     });
+    setShowDeleteModal(false);
   };
 
   // Fade In Animation
@@ -147,6 +148,7 @@ const App = () => {
   return (
     <animated.div className="container" style={fadeIn}>
       <Header
+        title={"Birthday Reminder"}
         onAdd={() => setShowAddBirthday(!showAddBirthday)}
         showAdd={showAddBirthday}
       />
@@ -161,9 +163,7 @@ const App = () => {
         <div style={{ textAlign: "center" }}>Loading...</div>
       ) : (
         <>
-          {showAddBirthday && (
-            <AddBirthday birthdays={birthdays} onAdd={addBirthday} />
-          )}
+          {showAddBirthday && <AddBirthday birthdays={birthdays} />}
           {birthdays.length > 0 ? (
             <Birthdays
               birthdays={birthdays}
@@ -172,6 +172,8 @@ const App = () => {
               loading={loading}
               onDelete={deleteBirthday}
               onEditClick={editBirthday}
+              showDeleteModal={showDeleteModal}
+              showDelete={() => setShowDeleteModal(!showDeleteModal)}
             />
           ) : (
             "No Birthday Saved"
