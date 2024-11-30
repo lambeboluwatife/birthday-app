@@ -22,7 +22,6 @@ const App = () => {
 
   // useEffect(() => {
   //   const getBirthdays = async () => {
-  //     // const birthdaysFromServer = await fetchBirthdays();
   //     setBirthdays(birthdaysFromDB);
   //   };
   //   getBirthdays();

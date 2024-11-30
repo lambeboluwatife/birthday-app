@@ -1,13 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "../dexie";
-
-export const fetchBirthdays = createAsyncThunk(
-  "birthday/fetchBirthdays",
-  async () => {
-    const birthdays = await db.birthdays.toArray();
-    return birthdays;
-  }
-);
+import { liveQuery } from "dexie";
 
 export const addBirthday = createAsyncThunk(
   "birthday/addBirthday",
@@ -29,23 +22,36 @@ export const addBirthday = createAsyncThunk(
   }
 );
 
+export const updateBirthday = createAsyncThunk(
+  "birthday/updateBirthday",
+  async (id, updatedBirthday) => {
+    return db.birthdays.update(id, updatedBirthday).then(function (updated) {
+      if (updated) alert("Updated");
+    });
+  }
+);
+
+export const deleteBirthday = createAsyncThunk(
+  "birthday/deleteBirthday",
+  async (id) => {
+    db.transaction("rw", db.birthdays, function () {
+      return db.birthdays.delete(id);
+    }).catch((err) => {
+      throw err;
+    });
+  }
+);
+
 const birthdaySlice = createSlice({
   name: "birthday",
   initialState: { birthdayFromDB: [], loading: false, error: null },
-  reducers: {},
+  reducers: {
+    setBirthdays: (state, action) => {
+      state.birthdayFromDB = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchBirthdays.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchBirthdays.fulfilled, (state, action) => {
-        state.loading = false;
-        state.birthdayFromDB = action.payload;
-      })
-      .addCase(fetchBirthdays.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      })
       .addCase(addBirthday.pending, (state) => {
         state.loading = true;
       })
@@ -55,13 +61,41 @@ const birthdaySlice = createSlice({
       .addCase(addBirthday.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(deleteBirthday.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteBirthday.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(deleteBirthday.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateBirthday.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateBirthday.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(updateBirthday.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
 
-// export const apiSlice = createApi({
-//   tagTypes: ["Birthday"],
-//   endpoints: (builder) => ({}),
-// });
+export const startListeningToBirthdays = () => (dispatch) => {
+  liveQuery(() => db.birthdays.toArray()).subscribe({
+    next: (birthdays) => {
+      dispatch(setBirthdays(birthdays));
+    },
+    error: (err) => {
+      console.error("Error with liveQuery:", err);
+    },
+  });
+};
+
+export const { setBirthdays } = birthdaySlice.actions;
 
 export default birthdaySlice.reducer;

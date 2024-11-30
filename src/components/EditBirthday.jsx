@@ -1,9 +1,11 @@
 import { faRemove } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
 import { useState } from "react";
+import { updateBirthday } from "../slices/birthdaySlice";
+import { useDispatch } from "react-redux";
 
 const EditBirthday = ({ currentBirthday, onUpdate, isEditing }) => {
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
 
@@ -20,7 +22,9 @@ const EditBirthday = ({ currentBirthday, onUpdate, isEditing }) => {
       return;
     }
 
-    onUpdate(currentBirthday.id, { name, date });
+    dispatch(updateBirthday(currentBirthday.id, { name, date }));
+
+    // onUpdate(currentBirthday.id, { name, date });
   };
   return (
     <form className="add-form" onSubmit={onSubmit}>
