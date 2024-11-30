@@ -2,7 +2,7 @@ import { useState } from "react";
 import { addBirthday } from "../slices/birthdaySlice";
 import { useDispatch } from "react-redux";
 
-const AddBirthday = ({ onAdd }) => {
+const AddBirthday = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [date, setDate] = useState("");

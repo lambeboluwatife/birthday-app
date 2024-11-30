@@ -4,7 +4,7 @@ import Birthday from "./Birthday";
 import TodayBirthdays from "./TodayBirthdays";
 import Button from "./Button";
 import { useEffect } from "react";
-import { fetchBirthdays } from "../slices/birthdaySlice";
+import { startListeningToBirthdays } from "../slices/birthdaySlice";
 
 const Birthdays = ({
   onAdd,
@@ -18,22 +18,15 @@ const Birthdays = ({
   const { birthdayFromDB, loading } = useSelector((state) => state.birthday);
 
   useEffect(() => {
-    dispatch(fetchBirthdays());
+    dispatch(startListeningToBirthdays());
   }, [dispatch]);
 
-  if (loading) {
-    return <h5>Loading...</h5>;
-  }
+  if (loading) return <h5>Loading...</h5>;
 
-  const today = moment().format("MMMM DD");
-
+  const today = moment().format("MM-DD");
   const todayBirthdays = birthdayFromDB.filter(
-    (birthday) => moment(birthday.date).format("MMMM DD") === today
+    (birthday) => moment(birthday.date).format("MM-DD") === today
   );
-
-  if (loading) {
-    return <h5>Loading...</h5>;
-  }
 
   return (
     <>
@@ -41,10 +34,9 @@ const Birthdays = ({
       {todayBirthdays.length > 0 ? (
         <TodayBirthdays todayBirthdays={todayBirthdays} />
       ) : (
-        "No Birthday Today"
+        <p>No Birthday Today</p>
       )}
       <h3 style={{ textAlign: "center", marginTop: "20px" }}>All Birthdays</h3>
-
       <Button
         color={showBirthdays ? "red" : "green"}
         text={showBirthdays ? "Close" : "Show Birthdays"}
@@ -54,8 +46,8 @@ const Birthdays = ({
         birthdayFromDB.map((birthday) => (
           <Birthday
             key={birthday.id}
-            onEditClick={onEditClick}
             birthday={birthday}
+            onEditClick={onEditClick}
             onDelete={onDelete}
             showDeleteModal={showDeleteModal}
             showDelete={showDelete}
